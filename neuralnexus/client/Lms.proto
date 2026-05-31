@@ -1,0 +1,195 @@
+syntax = "proto3";
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse{
+    string error = 1;
+    string token = 2;
+    string courses = 4;
+    string code = 3;
+
+}
+
+
+
+
+service Auth{
+   rpc studentLogin(LoginRequest) returns (LoginResponse) {};
+   rpc facultyLogin(LoginRequest) returns (LoginResponse) {};
+}
+
+
+message UploadCourseMaterialRequest{
+    string course = 1;
+    string name = 6;
+    string term = 2;
+    string filename = 3;
+    bytes data = 4;
+    string created = 5;
+    }
+
+message GetCourseContentsRequest{
+    string course = 1;
+    string term = 2;
+    }
+
+message GetCourseContentsResponse{
+    string course = 1;
+    string term = 2;
+    string data = 3;
+    string error = 4;
+    }
+
+message UploadCourseMaterialResponse{
+    string error = 1;
+    string size = 2;
+    string code = 3;
+    }
+message GetCourseMaterialRequest{
+    string course = 1;
+    string name = 2;
+    string term = 3;
+}
+message GetCourseMaterialResponse{
+    string name = 6;
+    string filename = 3;
+    bytes data = 4;
+    string error = 5;
+}
+service Materials{
+   rpc courseMaterialUpload(stream UploadCourseMaterialRequest) returns (UploadCourseMaterialResponse) {};
+   rpc getCourseContents(GetCourseContentsRequest) returns (GetCourseContentsResponse) {};
+   rpc getCourseMaterial(GetCourseMaterialRequest) returns (stream GetCourseMaterialResponse) {};
+}
+
+message SubmitAssignmentRequest{
+    string studentid = 1;
+    string course = 2;
+    string assignment_name = 3;
+    bytes data = 4;
+    string filename = 5;
+}
+
+message SubmitAssignmentResponse{
+    string code = 1;
+    string error = 2;
+
+}
+
+message GetSubmittedAssignmentsRequest{
+    string course = 2;
+    string assignment_name = 3;
+}
+
+message GetSubmittedAssignmentsResponse{
+    bytes data = 1;
+    string error = 2;
+    string code = 3;
+
+}
+service Assignments{
+   rpc submitAssignment(stream SubmitAssignmentRequest) returns (SubmitAssignmentResponse) {};
+   rpc getSubmittedAssignment(GetSubmittedAssignmentsRequest) returns (stream GetSubmittedAssignmentsResponse) {};
+
+}
+message CreateQueryRequest{
+    string query = 1;
+    string course = 2 ;
+    string reply_to = 3 ;
+}
+
+message CreateQueryResponse{
+    string error = 1;
+    string code = 2;
+}
+
+message GetQueriesRequest{
+    string course = 2;
+    string term = 1;
+}
+
+message GetQueriesResponse{
+    string code = 1;
+    string error = 2;
+    string queries = 3;
+}
+
+message AnswerQueryRequest{
+    string qid = 1;
+    string answer = 2;
+}
+
+
+message AnswerQueryResponse{
+    string error = 1;
+    string code = 2;
+}
+
+service Queries{
+    rpc createQuery(CreateQueryRequest) returns (CreateQueryResponse){};
+    rpc getQueries(GetQueriesRequest) returns (GetQueriesResponse){};
+    rpc answerQuery(AnswerQueryRequest) returns (AnswerQueryResponse){};
+}
+
+message AskLlmRequest{
+    string query = 2;
+}
+
+message AskLlmResponse{
+    string error = 1;
+    string reply = 2;
+    string code = 3;
+}
+
+service Llm{
+    rpc askLlm(stream AskLlmRequest) returns (stream AskLlmResponse){};
+    }
+
+message RequestVoteRequest{
+    int32 term  = 1;
+    string node_id = 2;
+    int32 last_log_idx = 3;
+    int32 last_log_term = 4;
+}
+message RequestVoteResponse{
+    int32 term = 1;
+    bool vote_granted  = 2;
+
+
+}
+
+
+message AppendEntriesRequest{
+    int32 term  = 1;
+    string leader_id  = 2;
+    int32 prev_log_idx  = 3;
+    int32 prev_log_term = 4;
+    string entries  = 5;
+    int32 leader_commit_idx = 6;
+}
+
+message AppendEntriesResponse{
+    int32 term  = 1;
+    bool success = 2;
+}
+
+
+message GetLeaderRequest{
+    int32 ack = 1;
+}
+
+message GetLeaderResponse{
+
+    string node_id = 1;
+
+
+}
+
+service Raft{
+    rpc requestVote(RequestVoteRequest) returns (RequestVoteResponse){};
+    rpc appendEntries(AppendEntriesRequest) returns (AppendEntriesResponse){};
+    rpc getLeader(GetLeaderRequest) returns (GetLeaderResponse){};
+}

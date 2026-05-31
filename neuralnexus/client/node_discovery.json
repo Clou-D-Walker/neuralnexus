@@ -1,0 +1,17 @@
+[
+  {
+    "id": "ee1f954b-99ab-48e2-95fd-730e4aec2489",
+    "host": "localhost",
+    "port": "50052"
+  },
+  {
+    "id": "de3b3357-8c1f-4911-910e-977d2ff02611",
+    "host": "localhost",
+    "port": "50053"
+  },
+  {
+    "id": "becedead-63a4-48a8-a017-e284cd02d21e",
+    "host": "localhost",
+    "port": "50054"
+  }
+]
